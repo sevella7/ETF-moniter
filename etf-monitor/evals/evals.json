@@ -1,0 +1,23 @@
+{
+  "skill_name": "etf-monitor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "监控今日ETF规模变化，当规模变动超过5%时通过飞书机器人发送提醒给我",
+      "expected_output": "应该能够执行ETF规模监控脚本，获取上交所和深交所数据，与上一交易日对比，筛选变动超过5%的ETF并发送飞书通知",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "帮我查看510050（博时沪深300ETF）今日的规模数据",
+      "expected_output": "返回510050的代码、名称、最新规模、与上一交易日规模对比和变动比例",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "如何把ETF规模监控配置到GitHub Actions实现每天22点自动运行？",
+      "expected_output": "提供完整的GitHub Actions workflow配置示例，包括trigger时间、environment variables配置",
+      "files": []
+    }
+  ]
+}

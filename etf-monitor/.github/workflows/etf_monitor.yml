@@ -1,0 +1,53 @@
+name: ETF规模监控
+
+on:
+  schedule:
+    # 北京时间22:00触发，即 UTC 14:00
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+    # 手动触发
+    inputs:
+      date:
+        description: '指定日期 (YYYY-MM-DD)，不填则使用今日'
+        required: false
+        type: string
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 检出新代码
+        uses: actions/checkout@v4
+
+      - name: 设置Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: |
+          pip install -r etf-monitor/requirements.txt
+
+      - name: 运行监控
+        env:
+          FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
+          FEISHU_MAX_BYTES: ${{ secrets.FEISHU_MAX_BYTES }}
+          ALERT_THRESHOLD: '5.0'
+        run: |
+          if [ -n "${{ inputs.date }}" ]; then
+            python etf-monitor/scripts/run_monitor.py --date ${{ inputs.date }} --no-cleanup
+          else
+            python etf-monitor/scripts/run_monitor.py --no-cleanup
+          fi
+
+      - name: 上传数据
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: etf-data-${{ inputs.date || github.event.inputs.date || 'latest' }}
+          path: |
+            etf-monitor/data/
+            etf-monitor/reports/
+          retention-days: 7
