@@ -9,7 +9,10 @@ from typing import Dict, Any, List
 
 # 飞书Webhook配置
 FEISHU_WEBHOOK_URL = os.getenv("FEISHU_WEBHOOK_URL", "")
-FEISHU_MAX_BYTES = int(os.getenv("FEISHU_MAX_BYTES", "20000"))
+max_bytes_str = os.getenv("FEISHU_MAX_BYTES", "20000")
+if not max_bytes_str:
+    max_bytes_str = "20000"
+FEISHU_MAX_BYTES = int(max_bytes_str)
 
 
 def send_feishu_message(message: str) -> bool:
