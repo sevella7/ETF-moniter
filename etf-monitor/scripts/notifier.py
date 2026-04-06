@@ -128,101 +128,35 @@ def send_alert(date_str: str, alerts: List[Dict], summary: Dict) -> bool:
     Returns:
         是否发送成功
     """
-    # 优先使用卡片消息
     if alerts:
         # 构建表格内容
         increase_alerts = [a for a in alerts if a["change_pct"] > 0]
         decrease_alerts = [a for a in alerts if a["change_pct"] < 0]
 
-        elements = []
-
         # 汇总信息
-        elements.append({
-            "tag": "div",
-            "text": {
-                "tag": "text",
-                "content": f"📅 日期: {date_str}\n"
-                           f"📈 监控ETF总数: {summary.get('total_count', 0)}\n"
-                           f"⚠️ 异动数量: {summary.get('alert_count', 0)}"
-            }
-        })
+        summary_text = f"📅 日期: {date_str}\n📈 监控ETF总数: {summary.get('total_count', 0)}\n⚠️ 异动数量: {summary.get('alert_count', 0)}"
 
-        elements.append({"tag": "hr"})
-
+        # 增幅告警
+        increase_text = ""
         if increase_alerts:
-            content = "🔴 **规模增幅 > 5%:**\n"
+            increase_text = "🔴 **规模增幅 > 5%:**\n"
             for alert in increase_alerts:
-                content += f"• {alert['name']} ({alert['code']}): {alert['current_amount']:.2f}亿元, +{alert['change_pct']:.2f}%\n"
-            elements.append({
-                "tag": "div",
-                "text": {"tag": "text", "content": content}
-            })
+                increase_text += f"• {alert['name']} ({alert['code']}): {alert['current_amount']:.2f}亿元, +{alert['change_pct']:.2f}%\n"
 
+        # 降幅告警
+        decrease_text = ""
         if decrease_alerts:
-            content = "🟢 **规模降幅 > 5%:**\n"
+            decrease_text = "🟢 **规模降幅 > 5%:**\n"
             for alert in decrease_alerts:
-                content += f"• {alert['name']} ({alert['code']}): {alert['current_amount']:.2f}亿元, {alert['change_pct']:.2f}%\n"
-            elements.append({
-                "tag": "div",
-                "text": {"tag": "text", "content": content}
-            })
+                decrease_text += f"• {alert['name']} ({alert['code']}): {alert['current_amount']:.2f}亿元, {alert['change_pct']:.2f}%\n"
 
-        payload = {
-            "msg_type": "interactive",
-            "card": {
-                "header": {
-                    "title": {
-                        "tag": "plain_text",
-                        "content": "📊 ETF规模异动提醒"
-                    },
-                    "template": "red"
-                },
-                "elements": elements
-            }
-        }
+        # 使用简单文本消息
+        message = f"{summary_text}\n\n{increase_text}{decrease_text}"
+        return send_feishu_message(message)
     else:
         # 无告警
-        payload = {
-            "msg_type": "interactive",
-            "card": {
-                "header": {
-                    "title": {
-                        "tag": "plain_text",
-                        "content": "✅ ETF规模监控报告"
-                    },
-                    "template": "green"
-                },
-                "elements": [
-                    {
-                        "tag": "div",
-                        "text": {
-                            "tag": "text",
-                            "content": f"📅 日期: {date_str}\n\n✅ 今日无ETF规模异动\n\n共计监控 **{summary.get('total_count', 0)}** 只ETF，规模变动均未超过5%"
-                        }
-                    }
-                ]
-            }
-        }
-
-    try:
-        response = requests.post(
-            FEISHU_WEBHOOK_URL,
-            json=payload,
-            timeout=30,
-            headers={"Content-Type": "application/json"}
-        )
-        result = response.json()
-
-        if result.get("code") == 0 or result.get("StatusCode") == 0:
-            print("飞书告警发送成功")
-            return True
-        else:
-            print(f"飞书告警发送失败: {result}")
-            return False
-
-    except Exception as e:
-        print(f"发送飞书告警异常: {e}")
-        return False
+        message = f"📊 ETF规模监控报告 ({date_str})\n\n✅ 今日无ETF规模异动\n\n共计监控 **{summary.get('total_count', 0)}** 只ETF，规模变动均未超过5%"
+        return send_feishu_message(message)
 
 
 if __name__ == "__main__":
