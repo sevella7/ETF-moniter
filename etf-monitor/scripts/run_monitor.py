@@ -29,7 +29,7 @@ def get_date_str(date_arg: str = None) -> str:
     return datetime.now().strftime("%Y-%m-%d")
 
 
-def fetch_all_etf_data() -> tuple:
+def fetch_all_etf_data(date_str: str = None) -> tuple:
     """
     获取全部ETF数据
 
@@ -42,11 +42,11 @@ def fetch_all_etf_data() -> tuple:
 
     # 获取上交所数据（使用AkShare）
     print("\n[1/4] 获取上交所ETF数据...")
-    sse_etfs = fetch_akshare_etf_sse()
+    sse_etfs =  fetch_akshare_etf_sse(date_str) 
 
     # 获取深交所数据（使用AkShare）
     print("\n[2/4] 获取深交所ETF数据...")
-    szse_etfs = fetch_akshare_etf_szse()
+    szse_etfs = fetch_akshare_etf_szse(date_str)
 
     print(f"\n数据获取完成: 上交所{len(sse_etfs)}只, 深交所{len(szse_etfs)}只")
 
@@ -67,7 +67,7 @@ def main():
     print(f"{'=' * 50}\n")
 
     # 获取数据
-    sse_etfs, szse_etfs = fetch_all_etf_data()
+    sse_etfs, szse_etfs = fetch_all_etf_data(date_str)  
 
     if not sse_etfs and not szse_etfs:
         print("错误: 未能获取任何ETF数据")
