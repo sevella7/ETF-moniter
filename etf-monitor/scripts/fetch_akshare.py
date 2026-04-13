@@ -23,8 +23,9 @@ def fetch_akshare_etf_sse(date: str = None) -> List[Dict[str, Any]]:
     """
     try:
         # 不传date参数，让AkShare内部处理默认日期
-        if date:
-            df = ak.fund_etf_scale_sse(date=date)
+         if date:                                                                                                              
+            date_str = date.replace("-", "")  # YYYY-MM-DD → YYYYMMDD                                                         
+            df = ak.fund_etf_scale_sse(date=date_str)  
         else:
             df = ak.fund_etf_scale_sse()
 
