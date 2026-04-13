@@ -40,7 +40,7 @@ def fetch_akshare_etf_sse(date: str = None) -> List[Dict[str, Any]]:
             name = str(row.get("基金简称", "")).strip()
             # 基金份额转换为亿份
             shares = float(row.get("基金份额", 0) or 0)
-            total_amount = shares / 100000000  # 转换为亿份
+            total_amount = shares / 10000  # 转换为亿份
 
             if code and name:
                 etfs.append({
@@ -74,7 +74,7 @@ def fetch_akshare_etf_szse() -> List[Dict[str, Any]]:
             name = str(row.get("基金简称", "")).strip()
             # 基金份额转换为亿份
             shares = float(row.get("基金份额", 0) or 0)
-            total_amount = shares / 100000000  # 转换为亿份
+            total_amount = shares / 10000  # 转换为亿份
 
             if code and name:
                 etfs.append({
