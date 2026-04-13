@@ -133,7 +133,15 @@ def fetch_akshare_etf_spot() -> List[Dict[str, Any]]:
         return []
 
 
-def fetch_all_akshare_etf(date: str = None) -> tuple:
+def fetch_akshare_etf_szse(date: str = None) -> List[Dict[str, Any]]:                                                 
+      # ...                                                                                                             
+      if date:                                                                                                          
+          date_str = date.replace("-", "")                                                                              
+          df = ak.fund_etf_scale_szse(date=date_str)                                                                    
+      else:                                                                                                           
+          df = ak.fund_etf_scale_szse()                                                                                 
+                                       
+
     """
     获取全部AkShare ETF数据（上交所 + 深交所）
 
