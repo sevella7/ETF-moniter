@@ -15,7 +15,6 @@ description: 监控上交所和深交所全部ETF每日规模变化，当规模�
 ## 数据来源
 1. **上交所ETF**: https://www.sse.com.cn/market/funddata/volumn/etfvolumn/
 2. **深交所ETF**: https://www.szse.cn/market/fundlist/etf/index.html
-3. **备选数据源**: AkShare (`akshare.fund_etf_hist_em`, `akshare.fund_etf_sse`, `akshare.fund_etf_szse`)
 
 ## 数据存储
 - 本地JSON文件存储历史数据: `data/etf_history/<date>.json`
@@ -81,7 +80,6 @@ etf-monitor/
 │   ├── run_monitor.py      # 主入口脚本
 │   ├── fetch_sse_etf.py   # 获取上交所ETF数据
 │   ├── fetch_szse_etf.py  # 获取深交所ETF数据
-│   ├── fetch_akshare.py    # AkShare备选数据源
 │   ├── storage.py          # 数据存储（读写JSON）
 │   ├── comparator.py        # 规模比较与告警判断
 │   └── notifier.py         # 飞书通知发送
@@ -97,8 +95,6 @@ etf-monitor/
 ## 依赖
 - requests
 - pandas
-- akshare
-- beautifulsoup4
 
 ## 注意事项
 1. 深交所网站结构需要确认，可能需要调整爬虫策略
