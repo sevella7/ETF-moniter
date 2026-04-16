@@ -13,8 +13,7 @@ description: 监控上交所和深交所全部ETF每日规模变化，当规模�
 - 也可手动触发
 
 ## 数据来源
-1. **上交所ETF**: https://www.sse.com.cn/market/funddata/volumn/etfvolumn/
-2. **深交所ETF**: https://www.szse.cn/market/fundlist/etf/index.html
+- **Tushare**: https://tushare.pro/ (需要注册获取token，免费积分足够使用)
 
 ## 数据存储
 - 本地JSON文件存储历史数据: `data/etf_history/<date>.json`
@@ -78,8 +77,7 @@ etf-monitor/
 ├── SKILL.md
 ├── scripts/
 │   ├── run_monitor.py      # 主入口脚本
-│   ├── fetch_sse_etf.py   # 获取上交所ETF数据
-│   ├── fetch_szse_etf.py  # 获取深交所ETF数据
+│   ├── fetch_tushare.py    # Tushare数据获取
 │   ├── storage.py          # 数据存储（读写JSON）
 │   ├── comparator.py        # 规模比较与告警判断
 │   └── notifier.py         # 飞书通知发送
@@ -95,9 +93,7 @@ etf-monitor/
 ## 依赖
 - requests
 - pandas
+- tushare
 
-## 注意事项
-1. 深交所网站结构需要确认，可能需要调整爬虫策略
-2. 如果网站反爬，需要加入适当的延迟和请求头
-3. 首次运行无法计算变动（无历史数据），只会保存数据
-4. 告警阈值5%可通过环境变量`ALERT_THRESHOLD`调整
+## 环境变量
+- `TUSHARE_TOKEN`: Tushare注册获取的token

@@ -16,8 +16,7 @@ from datetime import datetime
 # 添加项目路径
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from scripts.fetch_sse_etf import fetch_sse_etf_data
-from scripts.fetch_szse_etf import fetch_szse_etf_data
+from scripts.fetch_tushare import fetch_all_tushare_etf
 from scripts.storage import save_etf_data, load_etf_data
 from scripts.comparator import run_comparison, format_alert_message
 from scripts.notifier import send_alert
@@ -43,11 +42,7 @@ def fetch_all_etf_data(date_str: str = None) -> tuple:
 
     # 获取上交所数据
     print("\n[1/4] 获取上交所ETF数据...")
-    sse_etfs = fetch_sse_etf_data()
-
-    # 获取深交所数据
-    print("\n[2/4] 获取深交所ETF数据...")
-    szse_etfs = fetch_szse_etf_data()
+    sse_etfs, szse_etfs = fetch_all_tushare_etf()
 
     print(f"\n数据获取完成: 上交所{len(sse_etfs)}只, 深交所{len(szse_etfs)}只")
 
