@@ -32,6 +32,7 @@ jobs:
 
       - name: 运行监控
         env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
           FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
           FEISHU_MAX_BYTES: ${{ secrets.FEISHU_MAX_BYTES }}
           ALERT_THRESHOLD: '5.0'
